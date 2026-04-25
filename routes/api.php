@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\PersonaController;
 use App\Http\Controllers\API\MedidaController;
+use App\Http\Controllers\API\PersonaController;
+// Tus rutas aquí abajo...
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +23,6 @@ Route::get('/reporte/talla/{valor}', [MedidaController::class, 'reportePorTalla'
 // 3. Ruta Extra: Ver medidas de un alumno específico por su ID
 // Útil para cuando David o un supervisor quieran ver el historial de alguien
 Route::get('/personas/{id}/medidas', [MedidaController::class, 'showByPersona']);
+// Nuevas rutas para Alumnos
+Route::get('/personas', [PersonaController::class, 'index']);
+Route::post('/personas', [PersonaController::class, 'store']);
