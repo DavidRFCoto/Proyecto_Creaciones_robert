@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Persona;
 
 // Ruta principal: Redirige automáticamente al listado
 Route::get('/', function () {
@@ -10,6 +11,12 @@ Route::get('/', function () {
 // Tus otras rutas...
 Route::get('/tomar-medidas', function () {
     return view('medidas'); 
+});
+
+//  ruta medidas con ID
+Route::get('/tomar-medidas/{id}', function ($id) {
+    $persona = Persona::findOrFail($id);
+    return view('medidas', compact('persona'));
 });
 
 Route::get('/listado-medidas', function () {

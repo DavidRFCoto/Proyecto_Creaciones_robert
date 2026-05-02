@@ -12,7 +12,9 @@ class Persona extends Model
     // 1. Permitir la "Asignación Masiva" (Para que la API pueda guardar datos)
     protected $fillable = [
         'nombre', 
-        'sexo', 
+        'sexo',
+        'tipo',
+        'nombre_empresa', 
         'grupo_grado'
     ];
 

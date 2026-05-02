@@ -24,5 +24,7 @@ Route::get('/reporte/talla/{valor}', [MedidaController::class, 'reportePorTalla'
 // Útil para cuando David o un supervisor quieran ver el historial de alguien
 Route::get('/personas/{id}/medidas', [MedidaController::class, 'showByPersona']);
 // Nuevas rutas para Alumnos
-Route::get('/personas', [PersonaController::class, 'index']);
-Route::post('/personas', [PersonaController::class, 'store']);
+Route::apiResource('personas', PersonaController::class);
+
+//Route::get('/personas', [PersonaController::class, 'index']);
+//Route::post('/personas', [PersonaController::class, 'store']);

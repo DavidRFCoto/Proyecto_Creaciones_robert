@@ -18,6 +18,7 @@
             <select id="tipo_registro" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none" required onchange="cambiarTipo()">
                 <option value="alumno">Estudiante</option>
                 <option value="cliente">Cliente Particular</option>
+                <option value="empresa">Empresa</option>
             </select>
         </div>
 
@@ -25,6 +26,12 @@
             <label class="block text-sm font-bold text-gray-700 mb-2">Nombre Completo *</label>
             <input type="text" id="nombre" class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none" required autocomplete="off">
         </div>
+
+        <div class="mb-4 hidden" id="contenedor_empresa">
+             <label class="block text-sm font-bold text-gray-700 mb-2">Nombre de la Empresa *</label>
+            <input type="text" id="nombre_empresa" class="w-full border-gray-300 rounded-lg p-2.5">
+        </div>
+
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
@@ -51,48 +58,69 @@
 <script>
     // Lógica para mostrar/ocultar el campo de grado
     function cambiarTipo() {
-        const tipo = document.getElementById('tipo_registro').value;
-        const contenedorGrado = document.getElementById('contenedor_grado');
-        const inputGrado = document.getElementById('grupo_grado');
-        const btnGuardar = document.getElementById('btn-guardar');
+    const tipo = document.getElementById('tipo_registro').value;
 
-        if (tipo === 'cliente') {
-            // Esconder el campo y quitarle el "requerido"
-            contenedorGrado.classList.add('hidden');
-            inputGrado.value = ''; // Lo limpiamos por si acaso
-            
-            // Un toque visual: Cambiar el botón a rojo
-            btnGuardar.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-            btnGuardar.classList.add('bg-red-600', 'hover:bg-red-700');
-        } else {
-            // Mostrar el campo
-            contenedorGrado.classList.remove('hidden');
-            
-            // Regresar el botón a azul
-            btnGuardar.classList.remove('bg-red-600', 'hover:bg-red-700');
-            btnGuardar.classList.add('bg-blue-600', 'hover:bg-blue-700');
-        }
+    const contenedorGrado = document.getElementById('contenedor_grado');
+    const contenedorEmpresa = document.getElementById('contenedor_empresa');
+
+    const inputGrado = document.getElementById('grupo_grado');
+    const inputEmpresa = document.getElementById('nombre_empresa');
+
+    const btnGuardar = document.getElementById('btn-guardar');
+
+    // Reset (esto siempre se ejecuta)
+    contenedorGrado.classList.add('hidden');
+    contenedorEmpresa.classList.add('hidden');
+
+    inputGrado.value = '';
+    inputEmpresa.value = '';
+
+    btnGuardar.classList.remove('bg-blue-600', 'bg-red-600');
+
+    // Lógica exclusiva
+    if (tipo === 'alumno') {
+        contenedorGrado.classList.remove('hidden');
+        btnGuardar.classList.add('bg-blue-600');
+
+    } else if (tipo === 'empresa') {
+        contenedorEmpresa.classList.remove('hidden');
+        btnGuardar.classList.add('bg-blue-600');
+
+    } else {
+        // cliente
+        btnGuardar.classList.add('bg-blue-600');
     }
+}
+
 
     // Lógica para enviar el formulario a la base de datos
     document.getElementById('formularioUsuario').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const tipo = document.getElementById('tipo_registro').value;
-        let gradoValue = document.getElementById('grupo_grado').value;
+    e.preventDefault();
+    
+    const tipo = document.getElementById('tipo_registro').value;
 
-        // Validar que el alumno sí tenga grado escrito
-        if(tipo === 'alumno' && gradoValue.trim() === '') {
-            alert("Por favor, ingresa el grado del alumno.");
-            return;
-        }
+    let empresaValue = document.getElementById('nombre_empresa').value;
+    let gradoValue = document.getElementById('grupo_grado').value;
 
-        const datos = {
-            nombre: document.getElementById('nombre').value,
-            sexo: document.getElementById('sexo').value,
-            // Si el selector está en cliente, forzamos el 'N/A'. Si no, mandamos lo que escribió.
-            grupo_grado: tipo === 'cliente' ? 'N/A' : gradoValue 
-        };
+    // Validaciones
+    if (tipo === 'alumno' && gradoValue.trim() === '') {
+        alert("Ingresa el grado.");
+        return;
+    }
+
+    if (tipo === 'empresa' && empresaValue.trim() === '') {
+        alert("Ingresa el nombre de la empresa.");
+        return;
+    }
+
+    const datos = {
+        nombre: document.getElementById('nombre').value,
+        sexo: document.getElementById('sexo').value,
+        tipo: tipo,
+        nombre_empresa: tipo === 'empresa' ? empresaValue : null,
+        grupo_grado: tipo === 'alumno' ? gradoValue : 'N/A'
+    };
+
 
         fetch('/api/personas', {
             method: 'POST',
@@ -109,6 +137,11 @@
                 document.getElementById('error').classList.add('hidden');
                 document.getElementById('resultado').classList.remove('hidden');
                 document.getElementById('resultado').innerHTML = `✅ <strong>${data.persona.nombre}</strong> registrado con éxito como ${tipo.toUpperCase()}. Ya puedes ir a tomarle las medidas.`;
+            
+                 setTimeout(() => {
+                window.location.href = `/tomar-medidas/${data.persona.id}`;
+            }, 1200);
+            
             } else {
                 document.getElementById('resultado').classList.add('hidden');
                 document.getElementById('error').classList.remove('hidden');

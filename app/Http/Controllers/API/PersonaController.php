@@ -19,12 +19,16 @@ class PersonaController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'sexo' => 'required|in:Masculino,Femenino,masculino,femenino',
-            'grupo_grado' => 'nullable|string|max:50' 
+            'tipo' => 'required|in:alumno,cliente,empresa',
+            'grupo_grado' => 'nullable|string|max:50',
+            'nombre_empresa' => 'nullable|string|max:255' 
         ]);
 
         $persona = Persona::create([
             'nombre' => $request->nombre,
             'sexo' => $request->sexo,
+            'tipo' => $request->tipo, 
+            'nombre_empresa' => $request->nombre_empresa,
             // Si el campo viene vacío, le ponemos 'N/A' por defecto (Así el listado sabe que es Cliente)
             'grupo_grado' => $request->grupo_grado ?: 'N/A'
         ]);

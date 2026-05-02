@@ -53,6 +53,9 @@
     </div>
 
     <script>
+        
+        // Variable para almacenar el ID de la persona actual (si se pasó desde la ruta)
+         const personaIdActual = @json($persona->id ?? null);
         // Función auxiliar para obtener valores numéricos
         const getVal = id => { let v = document.getElementById(id).value; return v ? parseFloat(v) : null; };
 
@@ -67,7 +70,13 @@
                     
                     // Llenamos el menú con los nombres que vienen de la base de datos
                     data.forEach(alumno => {
-                        select.innerHTML += `<option value="${alumno.id}">${alumno.nombre} (${alumno.grupo_grado})</option>`;
+                         let selected = alumno.id == personaIdActual ? 'selected' : '';
+    
+    select.innerHTML += `
+        <option value="${alumno.id}" ${selected}>
+            ${alumno.nombre} (${alumno.grupo_grado})
+        </option>
+    `;
                     });
                 })
                 .catch(err => console.error("Error cargando alumnos:", err));
