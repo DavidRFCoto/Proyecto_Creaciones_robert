@@ -20,6 +20,7 @@ class PersonaController extends Controller
             'nombre' => 'required|string|max:255',
             'sexo' => 'required|in:Masculino,Femenino,masculino,femenino',
             'tipo' => 'required|in:alumno,cliente,empresa',
+            'nombre_colegio'=>'nullable|string|max:255',
             'grupo_grado' => 'nullable|string|max:50',
             'nombre_empresa' => 'nullable|string|max:255' 
         ]);
@@ -30,6 +31,7 @@ class PersonaController extends Controller
             'tipo' => $request->tipo, 
             'nombre_empresa' => $request->nombre_empresa,
             // Si el campo viene vacío, le ponemos 'N/A' por defecto (Así el listado sabe que es Cliente)
+            'nombre_colegio'=>$request->nombre_colegio,
             'grupo_grado' => $request->grupo_grado ?: 'N/A'
         ]);
 

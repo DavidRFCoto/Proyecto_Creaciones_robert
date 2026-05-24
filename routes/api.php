@@ -2,9 +2,15 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\API\MedidaController;
 use App\Http\Controllers\API\PersonaController;
-// Tus rutas aquí abajo...
+use App\Http\Controllers\API\InventarioMaterialController;
+use App\Http\Controllers\API\InventarioPrendaController;
+use App\Http\Controllers\API\MovimientoMaterialController;
+use App\Http\Controllers\API\MovimientoPrendaController;
+use App\Http\Controllers\API\ProduccionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -12,19 +18,79 @@ use App\Http\Controllers\API\PersonaController;
 |--------------------------------------------------------------------------
 */
 
-// 1. Rutas Estándar (CRUD completo para Personas y Medidas)
-Route::apiResource('personas', PersonaController::class);
-Route::apiResource('medidas', MedidaController::class);
 
-// 2. Rutas de Reportes Especializados
-// Esta ruta permite buscar por talla (ej: /api/reporte/talla/32)
-Route::get('/reporte/talla/{valor}', [MedidaController::class, 'reportePorTalla']);
+// =========================
+// PERSONAS
+// =========================
 
-// 3. Ruta Extra: Ver medidas de un alumno específico por su ID
-// Útil para cuando David o un supervisor quieran ver el historial de alguien
-Route::get('/personas/{id}/medidas', [MedidaController::class, 'showByPersona']);
-// Nuevas rutas para Alumnos
-Route::apiResource('personas', PersonaController::class);
+Route::apiResource(
+    'personas',
+    PersonaController::class
+);
 
-//Route::get('/personas', [PersonaController::class, 'index']);
-//Route::post('/personas', [PersonaController::class, 'store']);
+
+// =========================
+// MEDIDAS
+// =========================
+
+Route::apiResource(
+    'medidas',
+    MedidaController::class
+);
+
+
+// =========================
+// REPORTES
+// =========================
+
+Route::get(
+    '/reporte/talla/{valor}',
+    [MedidaController::class,'reportePorTalla']
+);
+
+
+Route::get(
+    '/personas/{id}/medidas',
+    [MedidaController::class,'showByPersona']
+);
+
+
+// =========================
+// INVENTARIO MATERIALES
+// =========================
+
+Route::apiResource(
+    'inventario-materiales',
+    InventarioMaterialController::class
+);
+
+// =========================
+// INVENTARIO PRENDAS
+// =========================
+
+Route::apiResource(
+    'inventario-prendas',
+    InventarioPrendaController::class
+);
+
+// =========================
+// MOVIMIENTOS MATERIALES
+// =========================
+Route::apiResource(
+    'movimientos-materiales',
+    MovimientoMaterialController::class
+);
+
+
+// =========================
+// MOVIMIENTOS PRENDAS
+// =========================
+Route::apiResource(
+'movimientos-prendas',
+MovimientoPrendaController::class
+);
+
+// =========================
+// PRODUCCIONES
+// =========================
+Route::apiResource('producciones', ProduccionController::class);

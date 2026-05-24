@@ -33,6 +33,18 @@
         </div>
 
 
+        <div class="mb-4 hidden" id="contenedor_colegio">
+    <label class="block text-sm font-bold text-gray-700 mb-2">
+        Nombre del Colegio *
+    </label>
+
+    <input
+        type="text"
+        id="nombre_colegio"
+        class="w-full border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        placeholder="Ej: Colegio Don Bosco">
+</div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
                 <label class="block text-sm font-bold text-gray-700 mb-2">Sexo *</label>
@@ -56,98 +68,205 @@
 </div>
 
 <script>
-    // Lógica para mostrar/ocultar el campo de grado
-    function cambiarTipo() {
+
+function cambiarTipo() {
     const tipo = document.getElementById('tipo_registro').value;
 
     const contenedorGrado = document.getElementById('contenedor_grado');
     const contenedorEmpresa = document.getElementById('contenedor_empresa');
+    const contenedorColegio = document.getElementById('contenedor_colegio');
 
     const inputGrado = document.getElementById('grupo_grado');
     const inputEmpresa = document.getElementById('nombre_empresa');
+    const inputColegio = document.getElementById('nombre_colegio');
 
     const btnGuardar = document.getElementById('btn-guardar');
 
-    // Reset (esto siempre se ejecuta)
+    // reset visual
     contenedorGrado.classList.add('hidden');
     contenedorEmpresa.classList.add('hidden');
+    contenedorColegio.classList.add('hidden');
 
+    // limpiar inputs
     inputGrado.value = '';
     inputEmpresa.value = '';
+    inputColegio.value = '';
 
-    btnGuardar.classList.remove('bg-blue-600', 'bg-red-600');
+    // reset botón
+    btnGuardar.classList.remove(
+        'bg-blue-600',
+        'bg-red-600'
+    );
 
-    // Lógica exclusiva
-    if (tipo === 'alumno') {
-        contenedorGrado.classList.remove('hidden');
-        btnGuardar.classList.add('bg-blue-600');
+    switch(tipo){
 
-    } else if (tipo === 'empresa') {
-        contenedorEmpresa.classList.remove('hidden');
-        btnGuardar.classList.add('bg-blue-600');
+        case 'alumno':
+            contenedorGrado.classList.remove('hidden');
+            contenedorColegio.classList.remove('hidden');
+            break;
 
-    } else {
-        // cliente
-        btnGuardar.classList.add('bg-blue-600');
+        case 'empresa':
+            contenedorEmpresa.classList.remove('hidden');
+            break;
+
+        case 'cliente':
+            break;
     }
+
+    btnGuardar.classList.add('bg-blue-600');
 }
 
 
-    // Lógica para enviar el formulario a la base de datos
-    document.getElementById('formularioUsuario').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const tipo = document.getElementById('tipo_registro').value;
+// VALIDACIONES CENTRALIZADAS
+function validarFormulario(tipo){
 
-    let empresaValue = document.getElementById('nombre_empresa').value;
-    let gradoValue = document.getElementById('grupo_grado').value;
+    const reglas = {
 
-    // Validaciones
-    if (tipo === 'alumno' && gradoValue.trim() === '') {
-        alert("Ingresa el grado.");
-        return;
-    }
+        alumno:[
+            {
+                valor:document.getElementById('grupo_grado').value,
+                mensaje:'Ingresa el grado.'
+            },
+            {
+                valor:document.getElementById('nombre_colegio').value,
+                mensaje:'Ingresa el colegio.'
+            }
+        ],
 
-    if (tipo === 'empresa' && empresaValue.trim() === '') {
-        alert("Ingresa el nombre de la empresa.");
-        return;
-    }
+        empresa:[
+            {
+                valor:document.getElementById('nombre_empresa').value,
+                mensaje:'Ingresa el nombre de la empresa.'
+            }
+        ],
 
-    const datos = {
-        nombre: document.getElementById('nombre').value,
-        sexo: document.getElementById('sexo').value,
-        tipo: tipo,
-        nombre_empresa: tipo === 'empresa' ? empresaValue : null,
-        grupo_grado: tipo === 'alumno' ? gradoValue : 'N/A'
+        cliente:[]
     };
 
 
-        fetch('/api/personas', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(datos)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.success) {
-                // Limpiar formulario y mostrar éxito
-                document.getElementById('nombre').value = '';
-                if(tipo === 'alumno') document.getElementById('grupo_grado').value = '';
-                
-                document.getElementById('error').classList.add('hidden');
-                document.getElementById('resultado').classList.remove('hidden');
-                document.getElementById('resultado').innerHTML = `✅ <strong>${data.persona.nombre}</strong> registrado con éxito como ${tipo.toUpperCase()}. Ya puedes ir a tomarle las medidas.`;
-            
-                 setTimeout(() => {
-                window.location.href = `/tomar-medidas/${data.persona.id}`;
-            }, 1200);
-            
-            } else {
-                document.getElementById('resultado').classList.add('hidden');
-                document.getElementById('error').classList.remove('hidden');
-                document.getElementById('error').innerText = "❌ Error al guardar. Verifica los datos.";
-            }
-        });
+    for(let campo of reglas[tipo]){
+
+        if(campo.valor.trim()===''){
+            alert(campo.mensaje);
+            return false;
+        }
+
+    }
+
+    return true;
+}
+
+
+
+document
+.getElementById('formularioUsuario')
+.addEventListener('submit',function(e){
+
+    e.preventDefault();
+
+    const tipo =
+    document.getElementById('tipo_registro').value;
+
+
+    if(!validarFormulario(tipo)){
+        return;
+    }
+
+
+    const datos={
+
+        nombre:
+        document.getElementById('nombre').value,
+
+        sexo:
+        document.getElementById('sexo').value,
+
+        tipo:tipo,
+
+        nombre_empresa:
+        tipo==='empresa'
+        ? document.getElementById('nombre_empresa').value
+        : null,
+
+        nombre_colegio:
+        tipo==='alumno'
+        ? document.getElementById('nombre_colegio').value
+        : null,
+
+        grupo_grado:
+        tipo==='alumno'
+        ? document.getElementById('grupo_grado').value
+        : 'N/A'
+    };
+
+
+    fetch('/api/personas',{
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json',
+            'Accept':'application/json'
+        },
+
+        body:JSON.stringify(datos)
+
+    })
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        if(data.success){
+
+            document.getElementById('formularioUsuario').reset();
+
+            document
+            .getElementById('error')
+            .classList.add('hidden');
+
+            document
+            .getElementById('resultado')
+            .classList.remove('hidden');
+
+            document
+            .getElementById('resultado')
+            .innerHTML=
+            `✅ <strong>${data.persona.nombre}</strong>
+            registrado con éxito como
+            ${tipo.toUpperCase()}.`;
+
+            setTimeout(()=>{
+
+                window.location.href=
+                `/tomar-medidas/${data.persona.id}`;
+
+            },1200);
+
+        }else{
+
+            document
+            .getElementById('resultado')
+            .classList.add('hidden');
+
+            document
+            .getElementById('error')
+            .classList.remove('hidden');
+
+            document
+            .getElementById('error')
+            .innerText=
+            "❌ Error al guardar.";
+
+        }
+
     });
+
+});
+
+
+// cargar estado inicial
+cambiarTipo();
+
 </script>
 @endsection

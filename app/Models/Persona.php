@@ -14,7 +14,8 @@ class Persona extends Model
         'nombre', 
         'sexo',
         'tipo',
-        'nombre_empresa', 
+        'nombre_empresa',
+        'nombre_colegio', 
         'grupo_grado'
     ];
 
@@ -23,4 +24,15 @@ class Persona extends Model
     {
         return $this->hasMany(Medida::class);
     }
+
+    public function facturas()
+{
+    return $this->hasMany(Factura::class);
+}
+
+public function producciones()
+{
+    return $this->hasMany(Produccion::class);
+}
+
 }
