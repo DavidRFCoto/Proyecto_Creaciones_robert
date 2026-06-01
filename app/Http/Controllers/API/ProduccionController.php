@@ -29,6 +29,7 @@ class ProduccionController extends Controller
      */
     public function store(Request $request)
 {
+     logger($request->all());
     DB::beginTransaction();
 
     try {

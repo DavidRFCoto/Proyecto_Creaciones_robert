@@ -394,10 +394,21 @@ if(obj.tipo === 'consumo') {
         return;
     }
 
-    obj.inventario_prenda_id = parseInt(itemDetalle.value);
+    const prendaId = itemDetalle.options[itemDetalle.selectedIndex]?.value;
+
+if (!prendaId) {
+    alert('Prenda inválida');
+    return;
 }
 
+obj.inventario_prenda_id = Number(prendaId);
+}
+
+console.log('OBJ A GUARDAR:', obj);
+
 detalles.push(obj);
+
+console.log('ARRAY DETALLES:', detalles);
 
 let nombreSeleccionado =
 itemDetalle.options[itemDetalle.selectedIndex].text;
@@ -438,7 +449,8 @@ detalles:
 detalles
 
 };
-
+console.log('DETALLES FINALES:', detalles);
+console.log('DATOS ENVIADOS:', datos);
 
 fetch(
 '/api/producciones',

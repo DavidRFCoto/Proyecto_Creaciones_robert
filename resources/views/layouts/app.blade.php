@@ -40,7 +40,8 @@
             <a href="/movimientos-materiales" class="block px-4 py-3 rounded-lg hover:bg-white/20 transition-colors {{ request()->is('movimientos-materiales') ? 'bg-white/30 border-l-4 border-white font-bold shadow-inner' : '' }}">📊 Reportes Materiales</a>
             <a href="/movimientos-prendas" class="block px-4 py-3 rounded-lg hover:bg-white/20 transition-colors {{ request()->is('movimientos-prendas') ? 'bg-white/30 border-l-4 border-white font-bold shadow-inner' : '' }}">📈 Reportes Prendas</a>
             <a href="/producciones" class="block px-4 py-3 rounded-lg hover:bg-white/20 transition-colors {{ request()->is('producciones') ? 'bg-white/30 border-l-4 border-white font-bold shadow-inner' : '' }}">⚙️ Producción</a>
-            </nav>
+               <a href="/facturas" class="block px-4 py-3 rounded-lg hover:bg-white/20 transition-colors {{ request()->is('facturas') ? 'bg-white/30 border-l-4 border-white font-bold shadow-inner' : '' }}">💰 Facturación</a>    
+        </nav>
 
         <div class="p-4 text-center text-xs text-white/60 border-t border-white/20">
             SIGETEX v1.0<br>Panel de Administración

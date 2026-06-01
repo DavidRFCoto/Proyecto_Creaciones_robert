@@ -10,6 +10,7 @@ use App\Http\Controllers\API\InventarioPrendaController;
 use App\Http\Controllers\API\MovimientoMaterialController;
 use App\Http\Controllers\API\MovimientoPrendaController;
 use App\Http\Controllers\API\ProduccionController;
+use App\Http\Controllers\API\FacturaController;
 
 
 /*
@@ -94,3 +95,13 @@ MovimientoPrendaController::class
 // PRODUCCIONES
 // =========================
 Route::apiResource('producciones', ProduccionController::class);
+
+
+// =========================
+// FACTURAS
+// =========================
+
+Route::apiResource(
+    'facturas',
+    FacturaController::class
+);

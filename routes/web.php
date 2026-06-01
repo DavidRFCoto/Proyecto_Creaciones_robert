@@ -66,3 +66,13 @@ Route::view(
 '/producciones',
 'producciones'
 );
+
+
+// =========================
+// FACTURAS
+// =========================
+
+Route::view(
+    '/facturas',
+    'facturas'
+);
